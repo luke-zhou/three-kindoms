@@ -1,3 +1,4 @@
+// https://www.redblobgames.com/grids/hexagons/
 import { Point } from "./point";
 
 class Hexagon {
@@ -7,14 +8,14 @@ class Hexagon {
         this.s = -q - r;
         this.center = center;
         this.radius = radius;
-        this.vertexes = this.#calcVertexes(center, radius);
+        this.#generateVertexes();
       }
 
-    #calcVertexes(center, radius) {
+    #generateVertexes() {
         const angle = 2 * Math.PI / 6;
-        return [...Array(6).keys()].map( i => {
-            const vertexX = center.x + radius * Math.cos(angle * i + 2 * Math.PI / 4);
-            const vertexY = center.y + radius * Math.sin(angle * i + 2 * Math.PI / 4);
+        this.vertexes = [...Array(6).keys()].map( i => {
+            const vertexX = this.center.x + this.radius * Math.cos(angle * i + 2 * Math.PI / 4);
+            const vertexY = this.center.y + this.radius * Math.sin(angle * i + 2 * Math.PI / 4);
             return new Point(vertexX, vertexY);
         });
     }
