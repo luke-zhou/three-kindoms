@@ -9,13 +9,23 @@ class Map {
         this.size = size;
         this.#generateUnitVectors(hexagonRadius);
         this.#generateHexagons();
+        this.#setupHomeCells(size, this.hexagons);
+    }
+
+    #setupHomeCells(size, hexagons) {
+        this.homeA = hexagons.find(h => h.r == 0 && h.q == -size);
+        this.homeA.color = '#FF0000';
+        this.homeB = hexagons.find(h => h.r == -size && h.q == size);
+        this.homeB.color = '#FFFF00';
+        this.homeC = hexagons.find(h => h.r == size && h.q == 0);
+        this.homeC.color = '#0000FF';
     }
 
     #generateUnitVectors(hexagonRadius) {
         const angle = 2 * Math.PI / 6;
         const unit = hexagonRadius * Math.sin(angle) * 2;
-        this.vectorR = new Point(1, 0).multiply(unit);
-        this.vectorQ = new Point(Math.cos(-angle), Math.sin(-angle)).multiply(unit);
+        this.vectorQ = new Point(1, 0).multiply(unit);
+        this.vectorR = new Point(Math.cos(angle), Math.sin(angle)).multiply(unit);
     }
 
     #generateHexagons() {

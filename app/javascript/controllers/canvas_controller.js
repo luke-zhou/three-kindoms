@@ -29,10 +29,16 @@ export default class extends Controller {
     }
 
     #drawHexagon(hexagon) {
-        this.#ctx.beginPath();
-        hexagon.vertexes.forEach(v => this.#ctx.lineTo(v.x, v.y));
-        this.#ctx.closePath();
-        this.#ctx.stroke();
+        const hexagonPath = new Path2D();
+        hexagon.vertexes.forEach(v => hexagonPath.lineTo(v.x, v.y));
+        hexagonPath.closePath();
+        this.#ctx.stroke(hexagonPath);
+        this.#ctx.fillStyle = hexagon.color;
+        this.#ctx.fill(hexagonPath);
+
+        //display q,r
+        // this.#ctx.fillText(`${hexagon.q}`, hexagon.center.x-hexagon.radius/2, hexagon.center.y-hexagon.radius/2);
+        // this.#ctx.fillText(`${hexagon.r}`, hexagon.center.x+hexagon.radius/2, hexagon.center.y);
     }
 }
 

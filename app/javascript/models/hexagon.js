@@ -9,6 +9,7 @@ class Hexagon {
         this.center = center;
         this.radius = radius;
         this.#generateVertexes();
+        this.color = '#FFFFFF';
       }
 
     #generateVertexes() {
