@@ -7,6 +7,11 @@ class World < ApplicationRecord
 
     COLORS = ['#FF0000', '#FFFF00', '#0000FF']
 
+    def valid(field)
+        [field.q.abs, field.r.abs, (field.q+field.r).abs]
+        .all?{|n| n <= size}
+    end
+
     def init
         init_kindoms
         init_fields
