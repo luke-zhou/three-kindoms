@@ -2,7 +2,9 @@
 <div class="container">
   <div class="row align-items-start">
     <div class="col-8" id='log-panel'>
-      <canvas id="world" height=800 width=800 data-controller="canvas"></canvas>
+    <%= turbo_frame_tag "canvas" do %>
+      <%= link_to 'START', games_start_path %>
+    <% end %>
     </div>
     <div class="col-4" id='log-panel'>
       logs

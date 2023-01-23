@@ -1,0 +1,2 @@
+class BattleField < Field
+end

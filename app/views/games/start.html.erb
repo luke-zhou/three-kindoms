@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "canvas" do %>
+    <div data-controller="canvas" >
+        <input data-canvas-target="worldID" type="hidden" value="<%= @world.id %>">
+        <canvas data-canvas-target="canvas" id="world" height=800 width=800></canvas>
+    </div>
+<% end %>
+    

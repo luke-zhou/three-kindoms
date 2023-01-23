@@ -1,0 +1,2 @@
+class HomeTown < Field
+end

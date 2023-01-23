@@ -10,15 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_19_225222) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_22_213316) do
+  create_table "fields", force: :cascade do |t|
+    t.string "type"
+    t.integer "r"
+    t.integer "q"
+    t.integer "s"
+    t.integer "kindom_id"
+    t.integer "world_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["kindom_id"], name: "index_fields_on_kindom_id"
+    t.index ["world_id"], name: "index_fields_on_world_id"
+  end
+
   create_table "kindoms", force: :cascade do |t|
     t.integer "world_id"
+    t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["world_id"], name: "index_kindoms_on_world_id"
   end
 
+  create_table "soldiers", force: :cascade do |t|
+    t.integer "kindom_id"
+    t.integer "field_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["field_id"], name: "index_soldiers_on_field_id"
+    t.index ["kindom_id"], name: "index_soldiers_on_kindom_id"
+  end
+
   create_table "worlds", force: :cascade do |t|
+    t.integer "size"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
