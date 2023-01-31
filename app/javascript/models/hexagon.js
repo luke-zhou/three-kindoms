@@ -9,7 +9,7 @@ class Hexagon {
         this.center = center;
         this.radius = radius;
         this.#generateVertexes();
-        this.color = '#FFFFFF';
+        this.color = 'WHITE';
         this.soldierNum = 0;
         this.type = 'BattleField';
       }

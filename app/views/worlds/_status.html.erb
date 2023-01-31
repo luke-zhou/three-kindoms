@@ -1,0 +1,7 @@
+    
+    <div class="row" id="status">
+    <%['RED', 'YELLOW', 'BLUE'].each do |c|%>
+      <div class="col-2"><%=world.kindom(c).soldiers.size%></div>
+      <div class="col-2"><%=world.kindom(c).battle_fields.size%></div>
+    <% end %>
+    </div>

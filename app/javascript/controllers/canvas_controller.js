@@ -2,23 +2,46 @@ import { Controller } from "@hotwired/stimulus"
 import { Point } from "../models/point.js"
 import { Hexagon } from "../models/hexagon.js"
 import { Map } from "../models/map.js";
+import Rails from 'rails-ujs'
 
 
 export default class extends Controller {
     #ctx;
+    #map;
     #mapSize = 3;
 
-    static targets = ["worldID", "canvas"]
+    static targets = ["worldID", "canvas"];
+
+    #colors = {
+        'RED': '#FF0000',
+        'YELLOW': '#FFFF00',
+        'BLUE': '#0000FF',
+        'WHITE': '#FFFFFF'
+    }
 
     connect() {
+        console.log('connect');
         const canvas = this.canvasTarget
         this.#ctx = canvas.getContext("2d");
         const hexagonRadius = this.#calcR(canvas);
         const center = new Point(canvas.width / 2, canvas.height / 2);
-        const map = new Map(center, hexagonRadius, this.#mapSize);
-        this.#updateMap(this.worldIDTarget.value, map);
+        this.#map = new Map(center, hexagonRadius, this.#mapSize);
+        this.#updateMap(this.worldIDTarget.value, this.#map);
         // console.log(result);
         // this.#drawMap(map);
+    }
+
+    move() {
+        fetch(`/worlds/${this.worldIDTarget.value}`, {
+            method: 'POST',
+            headers: {
+                "X-CSRF-Token": Rails.csrfToken()
+              }
+        })
+        .then(response => response.json())
+        // .then(r => console.log(r))
+        .then(r => this.#map.update(r))
+        .then(_ => this.#drawMap(this.#map));
     }
 
     #updateMap(worldID, map) {
@@ -36,6 +59,8 @@ export default class extends Controller {
     }
 
     #drawMap(map) {
+        this.#ctx.clearRect(0, 0, this.#ctx.width, this.#ctx.height);
+        console.log(map);
         for (const [_, hexagon] of Object.entries(map.hexagons)) {
             this.#drawHexagon(hexagon);
           }
@@ -47,7 +72,7 @@ export default class extends Controller {
         hexagonPath.closePath();
         this.#ctx.stroke(hexagonPath);
         const text = hexagon.type =='HomeTown' ? `H:${hexagon.soldierNum}` : (hexagon.soldierNum > 0 ? hexagon.soldierNum : '');
-        this.#ctx.fillStyle = hexagon.color;
+        this.#ctx.fillStyle = this.#colors[hexagon.color];
         this.#ctx.fill(hexagonPath);
 
         this.#ctx.font = "20px Arial";

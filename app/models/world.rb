@@ -5,21 +5,56 @@ class World < ApplicationRecord
 
     after_create :init
 
-    COLORS = ['#FF0000', '#FFFF00', '#0000FF']
+    COLORS = ['RED', 'YELLOW', 'BLUE']
 
-    def valid(field)
-        [field.q.abs, field.r.abs, (field.q+field.r).abs]
-        .all?{|n| n <= size}
+    def kindom(color)
+        kindoms.find{|k| k.color == color}
+    end
+    
+    def move
+        move_soldiers
+        finalize_fields
+        spawn_soldiers
+    end
+
+    def finalize_fields
+        battle_fields.select{|bf| bf.soldiers.present?}.each do |bf|
+            battle_groups = kindoms.map{|k| [k, []]}.to_h
+            bf.soldiers.each do |s|
+                battle_groups[s.kindom] << s
+            end
+            battle_pool = battle_groups.values.each(&:shuffle!).map(&:shift).compact
+            while battle_pool.size > 1
+                winner = battle_pool.shuffle!.shift
+                battle_groups[winner.kindom] << winner
+                battle_pool.each(&:destroy)
+                battle_pool = battle_groups.values.each(&:shuffle!).map(&:shift).compact
+            end
+
+            bf.kindom = battle_pool.first.kindom
+            bf.save!
+        end
+    end
+
+    def spawn_soldiers
+        kindoms.each(&:spawn)
+    end
+    
+    def move_soldiers
+        kindoms
+            .map(&:soldiers)
+            .flatten
+            .each(&:move)
+    end
+
+    def find_field(q:, r: )
+        (home_towns + battle_fields).select{|field| field.q ==q && field.r ==r}.first
     end
 
     def init
         init_kindoms
         init_fields
-        init_soldiers
-    end
-
-    def init_soldiers
-        kindoms.each(&:spawn)
+        spawn_soldiers
     end
 
     def init_fields
@@ -45,5 +80,5 @@ class World < ApplicationRecord
         COLORS.each {|c| kindoms << Kindom.create(color: c)}
     end
 
-    private :init, :init_kindoms, :init_fields, :init_soldiers
+    private :init, :init_kindoms, :init_fields
 end

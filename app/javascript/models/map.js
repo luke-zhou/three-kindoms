@@ -12,6 +12,7 @@ class Map {
 
     update(status) {
         status.kindoms.forEach(k => {
+            console.log(k);
             const color = k.color;
             const homeTownKey = [k.home_town.q, k.home_town.r];
             this.hexagons[homeTownKey].color = color;

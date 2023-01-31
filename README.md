@@ -14,3 +14,9 @@ Each kindom can spawn soldiers, and soldiers can move on the map.
     * each soldier in each turn can conduct one of the following move:
         * stay, no movement, 25%
         * one step, move to one of the field next to the current location(field), 75%, and randomly pick one in the possible fields
+* battle
+    * soldiers will be divided into 3 groups based on their kindoms.
+    * each group will pop one into the battle pool, and randomly pick one as the winner
+    * winner will be put back into his group, and loser would be destoried
+    * repeat until only one group left
+    * battle field belongs to the kindom of the letf group
